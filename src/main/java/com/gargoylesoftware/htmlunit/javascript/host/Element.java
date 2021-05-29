@@ -436,17 +436,6 @@ public class Element extends Node {
     }
 
     /**
-     * Callback method which allows different HTML element types to perform custom
-     * initialization of computed styles. For example, body elements in most browsers
-     * have default values for their margins.
-     *
-     * @param style the style to initialize
-     */
-    public void setDefaults(final ComputedCSSStyleDeclaration style) {
-        // Empty by default; override as necessary.
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
@@ -938,7 +927,7 @@ public class Element extends Node {
         }
 
         domNode.removeAllChildren();
-        getWindow().clearComputedStylesUpToRoot(this);
+        domNode.getPage().clearComputedStylesUpToRoot(this);
 
         final boolean addChildForNull = getBrowserVersion().hasFeature(JS_INNER_HTML_ADD_CHILD_FOR_NULL_VALUE);
         if ((value == null && addChildForNull) || (value != null && !"".equals(value))) {

@@ -434,7 +434,7 @@ public class HTMLTableElement extends RowContainer {
     @Override
     public Object appendChild(final Object childObject) {
         final Object appendedChild = super.appendChild(childObject);
-        getWindow().clearComputedStyles(this);
+        getDomNodeOrDie().getPage().clearComputedStyles(this);
         return appendedChild;
     }
 
@@ -444,7 +444,7 @@ public class HTMLTableElement extends RowContainer {
     @Override
     public Object removeChild(final Object childObject) {
         final Object removedChild = super.removeChild(childObject);
-        getWindow().clearComputedStyles(this);
+        getDomNodeOrDie().getPage().clearComputedStyles(this);
         return removedChild;
     }
 

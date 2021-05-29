@@ -19,92 +19,52 @@ import static com.gargoylesoftware.htmlunit.BrowserVersionFeatures.CSS_STYLE_PRO
 import static com.gargoylesoftware.htmlunit.BrowserVersionFeatures.JS_CLIENTHIGHT_INPUT_17;
 import static com.gargoylesoftware.htmlunit.BrowserVersionFeatures.JS_CLIENTWIDTH_INPUT_TEXT_143;
 import static com.gargoylesoftware.htmlunit.BrowserVersionFeatures.JS_CLIENTWIDTH_INPUT_TEXT_173;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.ACCELERATOR;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.BACKGROUND_ATTACHMENT;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.BACKGROUND_COLOR;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.BACKGROUND_IMAGE;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.BACKGROUND_POSITION;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.BACKGROUND_REPEAT;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.BORDER_BOTTOM_COLOR;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.BORDER_BOTTOM_STYLE;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.BORDER_BOTTOM_WIDTH;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.BORDER_LEFT_COLOR;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.BORDER_LEFT_STYLE;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.BOX_SIZING;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.CSS_FLOAT;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.DISPLAY;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.FONT_FAMILY;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.HEIGHT;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.LEFT;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.LINE_HEIGHT;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.MARGIN;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.MARGIN_LEFT;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.MARGIN_RIGHT;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.ORPHANS;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.OVERFLOW;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.PADDING;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.POSITION;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.TOP;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.WIDOWS;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.WIDTH;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.WORD_SPACING;
 import static com.gargoylesoftware.htmlunit.javascript.configuration.SupportedBrowser.FF;
 import static com.gargoylesoftware.htmlunit.javascript.configuration.SupportedBrowser.FF78;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.ACCELERATOR;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.AZIMUTH;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.BACKGROUND_ATTACHMENT;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.BACKGROUND_COLOR;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.BACKGROUND_IMAGE;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.BACKGROUND_POSITION;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.BACKGROUND_REPEAT;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.BORDER_BOTTOM_COLOR;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.BORDER_BOTTOM_STYLE;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.BORDER_BOTTOM_WIDTH;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.BORDER_COLLAPSE;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.BORDER_LEFT_COLOR;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.BORDER_LEFT_STYLE;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.BORDER_SPACING;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.BOX_SIZING;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.CAPTION_SIDE;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.COLOR;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.CSS_FLOAT;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.CURSOR;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.DIRECTION;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.DISPLAY;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.ELEVATION;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.EMPTY_CELLS;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.FONT;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.FONT_FAMILY;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.FONT_SIZE;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.FONT_STYLE;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.FONT_VARIANT;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.FONT_WEIGHT;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.HEIGHT;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.LEFT;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.LETTER_SPACING;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.LINE_HEIGHT;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.LIST_STYLE;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.LIST_STYLE_IMAGE;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.LIST_STYLE_POSITION;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.LIST_STYLE_TYPE;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.MARGIN;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.MARGIN_LEFT;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.MARGIN_RIGHT;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.ORPHANS;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.OVERFLOW;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.PADDING;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.PITCH;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.PITCH_RANGE;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.POSITION;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.QUOTES;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.RICHNESS;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.SPEAK;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.SPEAK_HEADER;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.SPEAK_NUMERAL;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.SPEAK_PUNCTUATION;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.SPEECH_RATE;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.STRESS;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.TEXT_ALIGN;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.TEXT_INDENT;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.TEXT_TRANSFORM;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.TOP;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.VISIBILITY;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.VOICE_FAMILY;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.VOLUME;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.WHITE_SPACE;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.WIDOWS;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.WIDTH;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.WORD_SPACING;
 
 import java.awt.font.FontRenderContext;
 import java.awt.font.LineBreakMeasurer;
 import java.awt.font.TextAttribute;
 import java.text.AttributedString;
-import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.gargoylesoftware.css.dom.CSSStyleDeclarationImpl;
-import com.gargoylesoftware.css.dom.Property;
-import com.gargoylesoftware.css.parser.selector.Selector;
-import com.gargoylesoftware.css.parser.selector.SelectorSpecificity;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.Page;
+import com.gargoylesoftware.htmlunit.css.ComputedCssStyleDeclaration;
+import com.gargoylesoftware.htmlunit.css.StyleAttributes;
+import com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition;
 import com.gargoylesoftware.htmlunit.css.StyleElement;
 import com.gargoylesoftware.htmlunit.html.BaseFrameElement;
 import com.gargoylesoftware.htmlunit.html.DomElement;
@@ -128,7 +88,6 @@ import com.gargoylesoftware.htmlunit.html.HtmlTextArea;
 import com.gargoylesoftware.htmlunit.html.HtmlTextInput;
 import com.gargoylesoftware.htmlunit.javascript.configuration.JsxClass;
 import com.gargoylesoftware.htmlunit.javascript.host.Element;
-import com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition;
 import com.gargoylesoftware.htmlunit.javascript.host.dom.Text;
 import com.gargoylesoftware.htmlunit.javascript.host.html.HTMLBodyElement;
 import com.gargoylesoftware.htmlunit.javascript.host.html.HTMLCanvasElement;
@@ -153,57 +112,6 @@ public class ComputedCSSStyleDeclaration extends CSSStyleDeclaration {
 
     /** Denotes a value which should be returned as is. */
     private static final String EMPTY_FINAL = new String("");
-
-    /** The set of 'inheritable' definitions. */
-    private static final Set<Definition> INHERITABLE_DEFINITIONS = EnumSet.of(
-        AZIMUTH,
-        BORDER_COLLAPSE,
-        BORDER_SPACING,
-        CAPTION_SIDE,
-        COLOR,
-        CURSOR,
-        DIRECTION,
-        ELEVATION,
-        EMPTY_CELLS,
-        FONT_FAMILY,
-        FONT_SIZE,
-        FONT_STYLE,
-        FONT_VARIANT,
-        FONT_WEIGHT,
-        FONT,
-        LETTER_SPACING,
-        LINE_HEIGHT,
-        LIST_STYLE_IMAGE,
-        LIST_STYLE_POSITION,
-        LIST_STYLE_TYPE,
-        LIST_STYLE,
-        ORPHANS,
-        PITCH_RANGE,
-        PITCH,
-        QUOTES,
-        RICHNESS,
-        SPEAK_HEADER,
-        SPEAK_NUMERAL,
-        SPEAK_PUNCTUATION,
-        SPEAK,
-        SPEECH_RATE,
-        STRESS,
-        TEXT_ALIGN,
-        TEXT_INDENT,
-        TEXT_TRANSFORM,
-        VISIBILITY,
-        VOICE_FAMILY,
-        VOICE_FAMILY,
-        VOLUME,
-        WHITE_SPACE,
-        WIDOWS,
-        WORD_SPACING);
-
-    /**
-     * Local modifications maintained here rather than in the element. We use a sorted
-     * map so that results are deterministic and thus easily testable.
-     */
-    private final SortedMap<String, StyleElement> localModifications_ = new TreeMap<>();
 
     /** The computed, cached width of the element to which this computed style belongs (no padding, borders, etc). */
     private Integer width_;
@@ -235,6 +143,8 @@ public class ComputedCSSStyleDeclaration extends CSSStyleDeclaration {
     /** The computed, cached top of the element to which this computed style belongs. */
     private Integer top_;
 
+    private ComputedCssStyleDeclaration styleDeclaration;
+
     /**
      * Creates an instance.
      */
@@ -244,11 +154,12 @@ public class ComputedCSSStyleDeclaration extends CSSStyleDeclaration {
     /**
      * Creates an instance.
      *
-     * @param style the original Style
+     * @param element the element to which this style is bound
      */
-    public ComputedCSSStyleDeclaration(final CSSStyleDeclaration style) {
-        super(style.getElement());
-        getElement().setDefaults(this);
+    public ComputedCSSStyleDeclaration(final Element element, final ComputedCssStyleDeclaration style) {
+        super(element, style.getElementStyleDeclaration());
+        styleDeclaration = style;
+        initialize(element);
     }
 
     /**
@@ -261,82 +172,20 @@ public class ComputedCSSStyleDeclaration extends CSSStyleDeclaration {
         // Empty.
     }
 
-    /**
-     * Makes a local, "computed", modification to this CSS style.
-     *
-     * @param declaration the style declaration
-     * @param selector the selector determining that the style applies to this element
-     */
-    public void applyStyleFromSelector(final CSSStyleDeclarationImpl declaration, final Selector selector) {
-        final SelectorSpecificity specificity = selector.getSelectorSpecificity();
-        for (final Property prop : declaration.getProperties()) {
-            final String name = prop.getName();
-            final String value = declaration.getPropertyValue(name);
-            final String priority = declaration.getPropertyPriority(name);
-            applyLocalStyleAttribute(name, value, priority, specificity);
-        }
+    @Override
+    protected void setStyleAttribute(String name, String newValue, String important) {
+        styleDeclaration.setStyleAttribute(name, newValue, important);
     }
 
-    private void applyLocalStyleAttribute(final String name, final String newValue, final String priority,
-            final SelectorSpecificity specificity) {
-        if (!StyleElement.PRIORITY_IMPORTANT.equals(priority)) {
-            final StyleElement existingElement = localModifications_.get(name);
-            if (existingElement != null) {
-                if (StyleElement.PRIORITY_IMPORTANT.equals(existingElement.getPriority())) {
-                    return; // can't override a !important rule by a normal rule. Ignore it!
-                }
-                else if (specificity.compareTo(existingElement.getSpecificity()) < 0) {
-                    return; // can't override a rule with a rule having higher specificity
-                }
-            }
-        }
-        final StyleElement element = new StyleElement(name, newValue, priority, specificity);
-        localModifications_.put(name, element);
-    }
-
-    /**
-     * Makes a local, "computed", modification to this CSS style that won't override other
-     * style attributes of the same name. This method should be used to set default values
-     * for style attributes.
-     *
-     * @param name the name of the style attribute to set
-     * @param newValue the value of the style attribute to set
-     */
-    public void setDefaultLocalStyleAttribute(final String name, final String newValue) {
-        final StyleElement element = new StyleElement(name, newValue, "", SelectorSpecificity.DEFAULT_STYLE_ATTRIBUTE);
-        localModifications_.put(name, element);
+    /** base method for getting styles **/
+    @Override
+    protected StyleElement getStyleElement(final String name) {
+        return styleDeclaration.getStyleElement(name);
     }
 
     @Override
-    protected StyleElement getStyleElement(final String name) {
-        final StyleElement existent = super.getStyleElement(name);
-
-        if (localModifications_ != null) {
-            final StyleElement localStyleMod = localModifications_.get(name);
-            if (localStyleMod == null) {
-                return existent;
-            }
-
-            if (existent == null) {
-                // Local modifications represent either default style elements or style elements
-                // defined in stylesheets; either way, they shouldn't overwrite any style
-                // elements derived directly from the HTML element's "style" attribute.
-                return localStyleMod;
-            }
-
-            // replace if !IMPORTANT
-            if (StyleElement.PRIORITY_IMPORTANT.equals(localStyleMod.getPriority())) {
-                if (StyleElement.PRIORITY_IMPORTANT.equals(existent.getPriority())) {
-                    if (existent.getSpecificity().compareTo(localStyleMod.getSpecificity()) < 0) {
-                        return localStyleMod;
-                    }
-                }
-                else {
-                    return localStyleMod;
-                }
-            }
-        }
-        return existent;
+    protected String getStylePriority(String name) {
+        return styleDeclaration.getStylePriority(name);
     }
 
     private String defaultIfEmpty(final String str, final StyleAttributes.Definition definition) {
@@ -562,7 +411,7 @@ public class ComputedCSSStyleDeclaration extends CSSStyleDeclaration {
                 return "";
             }
         }
-        final String value = super.getStyleAttribute(DISPLAY, false);
+        final String value = getStyleAttribute(DISPLAY, false);
         if (StringUtils.isEmpty(value)) {
             if (domElem instanceof HtmlElement) {
                 return ((HtmlElement) domElem).getDefaultStyleDisplay().value();
@@ -1809,23 +1658,16 @@ public class ComputedCSSStyleDeclaration extends CSSStyleDeclaration {
      * {@inheritDoc}
      */
     @Override
-    public String getStyleAttribute(final Definition style, final boolean getDefaultValueIfEmpty) {
-        if (!getElement().getDomNodeOrDie().isAttachedToPage()
-                && getBrowserVersion().hasFeature(CSS_STYLE_PROP_DISCONNECTED_IS_EMPTY)) {
-            return EMPTY_FINAL;
-        }
-        String value = super.getStyleAttribute(style, getDefaultValueIfEmpty);
-        if (value.isEmpty()) {
-            final Element parent = getElement().getParentElement();
-            if (INHERITABLE_DEFINITIONS.contains(style) && parent != null) {
-                value = getWindow().getComputedStyle(parent, null).getStyleAttribute(style, getDefaultValueIfEmpty);
-            }
-            else if (getDefaultValueIfEmpty) {
-                value = style.getDefaultComputedValue(getBrowserVersion());
-            }
-        }
+    public final String getStyleAttribute(final Definition definition) {
+        return getStyleAttribute(definition, true);
+    }
 
-        return value;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getStyleAttribute(final Definition style, final boolean getDefaultValueIfEmpty) {
+        return styleDeclaration.getStyleAttribute(style, getDefaultValueIfEmpty);
     }
 
     /**

@@ -14,6 +14,8 @@
  */
 package com.gargoylesoftware.htmlunit.javascript.host.css;
 
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
+
 import static com.gargoylesoftware.htmlunit.BrowserVersionFeatures.CSS_BACKGROUND_INITIAL;
 import static com.gargoylesoftware.htmlunit.BrowserVersionFeatures.CSS_BACKGROUND_RGBA;
 import static com.gargoylesoftware.htmlunit.BrowserVersionFeatures.CSS_LENGTH_INITIAL;
@@ -25,78 +27,77 @@ import static com.gargoylesoftware.htmlunit.BrowserVersionFeatures.CSS_ZINDEX_TY
 import static com.gargoylesoftware.htmlunit.BrowserVersionFeatures.JS_STYLE_UNSUPPORTED_PROPERTY_GETTER;
 import static com.gargoylesoftware.htmlunit.BrowserVersionFeatures.JS_STYLE_WORD_SPACING_ACCEPTS_PERCENT;
 import static com.gargoylesoftware.htmlunit.BrowserVersionFeatures.JS_STYLE_WRONG_INDEX_RETURNS_UNDEFINED;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.ACCELERATOR;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.BACKGROUND;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.BACKGROUND_ATTACHMENT;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.BACKGROUND_COLOR;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.BACKGROUND_IMAGE;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.BACKGROUND_POSITION;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.BACKGROUND_REPEAT;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.BEHAVIOR;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.BORDER;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.BORDER_BOTTOM;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.BORDER_BOTTOM_COLOR;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.BORDER_BOTTOM_STYLE;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.BORDER_BOTTOM_WIDTH;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.BORDER_LEFT;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.BORDER_LEFT_COLOR;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.BORDER_LEFT_STYLE;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.BORDER_LEFT_WIDTH;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.BORDER_RIGHT;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.BORDER_RIGHT_COLOR;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.BORDER_RIGHT_STYLE;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.BORDER_RIGHT_WIDTH;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.BORDER_TOP;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.BORDER_TOP_COLOR;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.BORDER_TOP_STYLE;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.BORDER_TOP_WIDTH;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.BORDER_WIDTH;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.BOTTOM;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.COLOR;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.DISPLAY;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.FLOAT;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.FONT;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.FONT_FAMILY;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.FONT_SIZE;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.HEIGHT;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.LEFT;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.LETTER_SPACING;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.LINE_HEIGHT;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.MARGIN;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.MARGIN_BOTTOM;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.MARGIN_LEFT;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.MARGIN_RIGHT;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.MARGIN_TOP;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.MAX_HEIGHT;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.MAX_WIDTH;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.MIN_HEIGHT;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.MIN_WIDTH;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.OPACITY;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.ORPHANS;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.OUTLINE;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.OUTLINE_WIDTH;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.PADDING;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.PADDING_BOTTOM;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.PADDING_LEFT;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.PADDING_RIGHT;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.PADDING_TOP;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.POSITION;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.RIGHT;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.RUBY_ALIGN;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.SIZE;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.TEXT_INDENT;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.TOP;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.VERTICAL_ALIGN;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.WIDOWS;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.WIDTH;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.WORD_SPACING;
+import static com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition.Z_INDEX_;
 import static com.gargoylesoftware.htmlunit.javascript.configuration.SupportedBrowser.CHROME;
 import static com.gargoylesoftware.htmlunit.javascript.configuration.SupportedBrowser.EDGE;
 import static com.gargoylesoftware.htmlunit.javascript.configuration.SupportedBrowser.FF;
 import static com.gargoylesoftware.htmlunit.javascript.configuration.SupportedBrowser.FF78;
 import static com.gargoylesoftware.htmlunit.javascript.configuration.SupportedBrowser.IE;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.ACCELERATOR;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.BACKGROUND;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.BACKGROUND_ATTACHMENT;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.BACKGROUND_COLOR;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.BACKGROUND_IMAGE;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.BACKGROUND_POSITION;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.BACKGROUND_REPEAT;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.BEHAVIOR;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.BORDER;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.BORDER_BOTTOM;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.BORDER_BOTTOM_COLOR;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.BORDER_BOTTOM_STYLE;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.BORDER_BOTTOM_WIDTH;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.BORDER_LEFT;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.BORDER_LEFT_COLOR;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.BORDER_LEFT_STYLE;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.BORDER_LEFT_WIDTH;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.BORDER_RIGHT;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.BORDER_RIGHT_COLOR;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.BORDER_RIGHT_STYLE;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.BORDER_RIGHT_WIDTH;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.BORDER_TOP;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.BORDER_TOP_COLOR;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.BORDER_TOP_STYLE;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.BORDER_TOP_WIDTH;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.BORDER_WIDTH;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.BOTTOM;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.COLOR;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.DISPLAY;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.FLOAT;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.FONT;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.FONT_FAMILY;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.FONT_SIZE;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.HEIGHT;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.LEFT;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.LETTER_SPACING;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.LINE_HEIGHT;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.MARGIN;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.MARGIN_BOTTOM;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.MARGIN_LEFT;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.MARGIN_RIGHT;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.MARGIN_TOP;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.MAX_HEIGHT;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.MAX_WIDTH;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.MIN_HEIGHT;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.MIN_WIDTH;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.OPACITY;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.ORPHANS;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.OUTLINE;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.OUTLINE_WIDTH;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.PADDING;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.PADDING_BOTTOM;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.PADDING_LEFT;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.PADDING_RIGHT;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.PADDING_TOP;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.POSITION;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.RIGHT;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.RUBY_ALIGN;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.SIZE;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.TEXT_INDENT;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.TOP;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.VERTICAL_ALIGN;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.WIDOWS;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.WIDTH;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.WORD_SPACING;
-import static com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition.Z_INDEX_;
-import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 import java.awt.Color;
 import java.text.MessageFormat;
@@ -119,9 +120,13 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.gargoylesoftware.css.dom.CSSStyleDeclarationImpl;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.WebAssert;
+import com.gargoylesoftware.htmlunit.css.CssStyleDeclaration;
+import com.gargoylesoftware.htmlunit.css.CssStyleDeclarationWrapper;
+import com.gargoylesoftware.htmlunit.css.ElementCssStyleDeclaration;
+import com.gargoylesoftware.htmlunit.css.StyleAttributes;
+import com.gargoylesoftware.htmlunit.css.StyleAttributes.Definition;
 import com.gargoylesoftware.htmlunit.css.StyleElement;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.javascript.SimpleScriptable;
@@ -131,7 +136,6 @@ import com.gargoylesoftware.htmlunit.javascript.configuration.JsxFunction;
 import com.gargoylesoftware.htmlunit.javascript.configuration.JsxGetter;
 import com.gargoylesoftware.htmlunit.javascript.configuration.JsxSetter;
 import com.gargoylesoftware.htmlunit.javascript.host.Element;
-import com.gargoylesoftware.htmlunit.javascript.host.css.StyleAttributes.Definition;
 import com.gargoylesoftware.htmlunit.javascript.host.html.HTMLCanvasElement;
 import com.gargoylesoftware.htmlunit.javascript.host.html.HTMLElement;
 import com.gargoylesoftware.htmlunit.javascript.host.html.HTMLHtmlElement;
@@ -147,7 +151,7 @@ import net.sourceforge.htmlunit.corejs.javascript.Undefined;
  * @author <a href="mailto:mbowler@GargoyleSoftware.com">Mike Bowler</a>
  * @author <a href="mailto:cse@dynabean.de">Christian Sell</a>
  * @author Daniel Gredler
- * @author Chris Erskine
+ * @author Chris Erskineeva_spyce
  * @author Ahmed Ashour
  * @author Rodney Gitzel
  * @author Sudhan Moghe
@@ -226,7 +230,7 @@ public class CSSStyleDeclaration extends SimpleScriptable {
     private Element jsElement_;
 
     /** The wrapped CSSStyleDeclaration (if created from CSSStyleRule). */
-    private CSSStyleDeclarationImpl styleDeclaration_;
+    private CssStyleDeclaration styleDeclaration_;
 
     static {
         CSSColors_.put("aqua", "rgb(0, 255, 255)");
@@ -252,6 +256,7 @@ public class CSSStyleDeclaration extends SimpleScriptable {
      */
     @JsxConstructor({CHROME, EDGE, FF, FF78})
     public CSSStyleDeclaration() {
+        styleDeclaration_ = CssStyleDeclaration.getEmptyUnmodifiableInstance();
     }
 
     /**
@@ -259,9 +264,19 @@ public class CSSStyleDeclaration extends SimpleScriptable {
      * @param element the element to which this style is bound
      */
     public CSSStyleDeclaration(final Element element) {
+        this(element, CssStyleDeclaration.build(element.getDomNodeOrDie()));
+        initialize(element);
+    }
+
+    /**
+     * Creates an instance which wraps the specified style declaration.
+     * @param element the element to which this style is bound
+     * @param styleDeclaration the style declaration to wrap
+     */
+    protected CSSStyleDeclaration(final Element element, final ElementCssStyleDeclaration styleDeclaration) {
         setParentScope(element.getParentScope());
         setPrototype(getPrototype(getClass()));
-        initialize(element);
+        styleDeclaration_ = styleDeclaration;
     }
 
     /**
@@ -269,7 +284,7 @@ public class CSSStyleDeclaration extends SimpleScriptable {
      * @param parentScope the parent scope to use
      * @param styleDeclaration the style declaration to wrap
      */
-    CSSStyleDeclaration(final Scriptable parentScope, final CSSStyleDeclarationImpl styleDeclaration) {
+    CSSStyleDeclaration(final Scriptable parentScope, final CssStyleDeclarationWrapper styleDeclaration) {
         setParentScope(parentScope);
         setPrototype(getPrototype(getClass()));
         styleDeclaration_ = styleDeclaration;
@@ -277,9 +292,9 @@ public class CSSStyleDeclaration extends SimpleScriptable {
 
     /**
      * Initializes the object.
-     * @param htmlElement the element that this style describes
+     * @param element the element that this style describes
      */
-    private void initialize(final Element element) {
+    protected void initialize(final Element element) {
         // Initialize.
         WebAssert.notNull("htmlElement", element);
         jsElement_ = element;
@@ -341,14 +356,7 @@ public class CSSStyleDeclaration extends SimpleScriptable {
      * @return the named style attribute value, or an empty string if it is not found
      */
     protected String getStylePriority(final String name) {
-        if (styleDeclaration_ != null) {
-            return styleDeclaration_.getPropertyPriority(name);
-        }
-        final StyleElement element = getStyleElement(name);
-        if (element != null && element.getValue() != null) {
-            return element.getPriority();
-        }
-        return "";
+        return styleDeclaration_.getStylePriority(name);
     }
 
     /**
@@ -358,10 +366,7 @@ public class CSSStyleDeclaration extends SimpleScriptable {
      * @return the StyleElement or null if not found
      */
     protected StyleElement getStyleElement(final String name) {
-        if (jsElement_ == null) {
-            return null;
-        }
-        return jsElement_.getDomNodeOrDie().getStyleElement(name);
+        return styleDeclaration_.getStyleElement(name);
     }
 
     /**
@@ -399,37 +404,23 @@ public class CSSStyleDeclaration extends SimpleScriptable {
      */
     private String getStyleAttribute(final Definition name1, final Definition name2) {
         final String value;
-        if (styleDeclaration_ == null) {
-            final StyleElement element1 = getStyleElement(name1.getAttributeName());
-            final StyleElement element2 = getStyleElement(name2.getAttributeName());
+        final StyleElement element1 = getStyleElement(name1.getAttributeName());
+        final StyleElement element2 = getStyleElement(name2.getAttributeName());
 
-            if (element2 == null) {
-                if (element1 == null) {
-                    return "";
-                }
-                return element1.getValue();
-            }
+        if (element2 == null) {
             if (element1 == null) {
-                value = element2.getValue();
-            }
-            else {
-                if (element1.compareTo(element2) > 0) {
-                    return element1.getValue();
-                }
-                value = element2.getValue();
-            }
-        }
-        else {
-            final String value1 = styleDeclaration_.getPropertyValue(name1.getAttributeName());
-            final String value2 = styleDeclaration_.getPropertyValue(name2.getAttributeName());
-
-            if ("".equals(value1) && "".equals(value2)) {
                 return "";
             }
-            if (!"".equals(value1) && "".equals(value2)) {
-                return value1;
+            return element1.getValue();
+        }
+        if (element1 == null) {
+            value = element2.getValue();
+        }
+        else {
+            if (element1.compareTo(element2) > 0) {
+                return element1.getValue();
             }
-            value = value2;
+            value = element2.getValue();
         }
 
         final String[] values = StringUtils.split(value);
@@ -492,15 +483,7 @@ public class CSSStyleDeclaration extends SimpleScriptable {
      * @param important important value
      */
     protected void setStyleAttribute(final String name, String newValue, final String important) {
-        if (null == newValue || "null".equals(newValue)) {
-            newValue = "";
-        }
-        if (styleDeclaration_ != null) {
-            styleDeclaration_.setProperty(name, newValue, important);
-            return;
-        }
-
-        jsElement_.getDomNodeOrDie().replaceStyleAttribute(name, newValue, important);
+        styleDeclaration_.setStyleAttribute(name, newValue, important);
     }
 
     /**
@@ -508,11 +491,7 @@ public class CSSStyleDeclaration extends SimpleScriptable {
      * @param name the attribute name (delimiter-separated, not camel-cased)
      */
     private String removeStyleAttribute(final String name) {
-        if (null != styleDeclaration_) {
-            return styleDeclaration_.removeProperty(name);
-        }
-
-        return jsElement_.getDomNodeOrDie().removeStyleAttribute(name);
+        return styleDeclaration_.removeStyleAttribute(name);
     }
 
     /**
@@ -975,7 +954,7 @@ public class CSSStyleDeclaration extends SimpleScriptable {
     /**
      * Gets the border width for the specified side
      * @param borderSideWidth the border side width Definition
-     * @param borderside the border side Definition
+     * @param borderSide the border side Definition
      * @return the width, "" if not defined
      */
     private String getBorderWidth(final Definition borderSideWidth, final Definition borderSide) {
@@ -1243,14 +1222,7 @@ public class CSSStyleDeclaration extends SimpleScriptable {
      */
     @JsxGetter
     public String getCssText() {
-        if (styleDeclaration_ != null) {
-            final String text = styleDeclaration_.getCssText();
-            if (styleDeclaration_.getLength() > 0) {
-                return text + ";";
-            }
-            return text;
-        }
-        return jsElement_.getDomNodeOrDie().getAttributeDirect("style");
+        return styleDeclaration_.getCssText();
     }
 
     /**
@@ -1259,11 +1231,7 @@ public class CSSStyleDeclaration extends SimpleScriptable {
      */
     @JsxSetter
     public void setCssText(final String value) {
-        if (styleDeclaration_ != null) {
-            styleDeclaration_.setCssText(value);
-            return;
-        }
-        jsElement_.getDomNodeOrDie().setAttribute("style", value);
+        styleDeclaration_.setCssText(value);
     }
 
     /**
@@ -1669,8 +1637,8 @@ public class CSSStyleDeclaration extends SimpleScriptable {
      * @param definition the definition
      * @return the value
      */
-    public final String getStyleAttribute(final Definition definition) {
-        return getStyleAttribute(definition, true);
+    public String getStyleAttribute(final Definition definition) {
+        return getStyleAttribute(definition, false);
     }
 
     /**
@@ -1680,22 +1648,7 @@ public class CSSStyleDeclaration extends SimpleScriptable {
      * @return the value
      */
     public String getStyleAttribute(final Definition definition, final boolean getDefaultValueIfEmpty) {
-        return getStyleAttributeImpl(definition.getAttributeName());
-    }
-
-    private String getStyleAttributeImpl(final String string) {
-        if (styleDeclaration_ != null) {
-            return styleDeclaration_.getPropertyValue(string);
-        }
-        final StyleElement element = getStyleElement(string);
-        if (element != null && element.getValue() != null) {
-            final String value = element.getValue();
-            if (!value.contains("url")) {
-                return value.toLowerCase(Locale.ROOT);
-            }
-            return value;
-        }
-        return "";
+        return styleDeclaration_.getStyleAttribute(definition, getDefaultValueIfEmpty);
     }
 
     @Override
@@ -2554,7 +2507,7 @@ public class CSSStyleDeclaration extends SimpleScriptable {
                 return (String) value;
             }
         }
-        return getStyleAttributeImpl(name);
+        return styleDeclaration_.getStyleAttribute(name);
     }
 
     /**
@@ -3041,7 +2994,7 @@ public class CSSStyleDeclaration extends SimpleScriptable {
      * @param auto true if auto is supported
      * @param thinMedThick thin, medium, thick are supported
      * @param unitRequired unit is required
-     * @param perecent true if percent is supported
+     * @param percent true if percent is supported
      */
     private void setStyleLengthAttribute(final String name, final Object value, final String important,
                 final boolean auto, final boolean percent, final boolean thinMedThick, final boolean unitRequired) {

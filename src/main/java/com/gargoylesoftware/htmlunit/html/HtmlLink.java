@@ -30,9 +30,9 @@ import com.gargoylesoftware.htmlunit.SgmlPage;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.WebRequest;
 import com.gargoylesoftware.htmlunit.WebResponse;
+import com.gargoylesoftware.htmlunit.css.CssStyleSheet;
 import com.gargoylesoftware.htmlunit.javascript.AbstractJavaScriptEngine;
 import com.gargoylesoftware.htmlunit.javascript.PostponedAction;
-import com.gargoylesoftware.htmlunit.javascript.host.css.StyleSheetList;
 import com.gargoylesoftware.htmlunit.javascript.host.event.Event;
 import com.gargoylesoftware.htmlunit.javascript.host.html.HTMLLinkElement;
 import com.gargoylesoftware.htmlunit.xml.XmlPage;
@@ -54,6 +54,12 @@ public class HtmlLink extends HtmlElement {
 
     /** The HTML tag represented by this element. */
     public static final String TAG_NAME = "link";
+
+    /**
+     * The associated style sheet (only valid for links of type
+     * <tt>&lt;link rel="stylesheet" type="text/css" href="..." /&gt;</tt>).
+     */
+    private CssStyleSheet sheet;
 
     /**
      * Creates an instance of HtmlLink
@@ -257,10 +263,21 @@ public class HtmlLink extends HtmlElement {
     }
 
     private void executeEvent(final String type) {
-        final Object scriptable = getScriptableObject();
-        final HTMLLinkElement link = (HTMLLinkElement) scriptable;
-        final Event event = new Event(this, type);
-        link.executeEventLocally(event);
+        WebClient webClient = getPage().getWebClient();
+        if(webClient.isJavaScriptEngineEnabled() && webClient.isJavaScriptEnabled()) {
+            final Object scriptable = getScriptableObject();
+            final HTMLLinkElement link = (HTMLLinkElement) scriptable;
+            final Event event = new Event(this, type);
+            link.executeEventLocally(event);
+        }
+    }
+
+    public boolean isStyleSheetLink(){
+        String rel = getRelAttribute();
+        if (rel != null) {
+            rel = rel.trim();
+        }
+        return "stylesheet".equalsIgnoreCase(rel);
     }
 
     /**
@@ -276,7 +293,7 @@ public class HtmlLink extends HtmlElement {
         }
 
         final WebClient webClient = getPage().getWebClient();
-        if (!StyleSheetList.isStyleSheetLink(this)) {
+        if (!isStyleSheetLink()) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Link type '" + getRelAttribute() + "' not supported ("
                             + asXml().replaceAll("\\r|\\n", "") + ").");
@@ -293,25 +310,16 @@ public class HtmlLink extends HtmlElement {
             return;
         }
 
-        if (!webClient.isJavaScriptEngineEnabled()) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Stylesheet Link found but ignored because javascript engine is disabled ("
-                            + asXml().replaceAll("\\r|\\n", "") + ").");
-            }
-            return;
-        }
-
         final PostponedAction action = new PostponedAction(getPage(), "Loading of link " + this) {
             @Override
             public void execute() {
-                final HTMLLinkElement linkElem = HtmlLink.this.getScriptableObject();
                 // force loading, caching inside the link
-                linkElem.getSheet();
+                HtmlLink.this.getSheet();
             }
         };
 
-        final AbstractJavaScriptEngine<?> engine = webClient.getJavaScriptEngine();
-        if (postponed) {
+        if (postponed && webClient.isJavaScriptEngineEnabled()) {
+            final AbstractJavaScriptEngine<?> engine = webClient.getJavaScriptEngine();
             engine.addPostponedAction(action);
         }
         else {
@@ -325,5 +333,17 @@ public class HtmlLink extends HtmlElement {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    /**
+     * Returns the associated style sheet (only valid for links of type
+     * <tt>&lt;link rel="stylesheet" type="text/css" href="..." /&gt;</tt>).
+     * @return the associated style sheet
+     */
+    public CssStyleSheet getSheet() {
+        if (sheet == null) {
+            sheet = CssStyleSheet.loadStylesheet(this);
+        }
+        return sheet;
     }
 }
